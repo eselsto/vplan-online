@@ -1,0 +1,17 @@
+<?php
+class config{
+	public $url_web = "https://localhost";
+	public $url_api = "https://localhost/api/";
+	public $api_secret = "test";
+	private $user = "user";
+	private $pass = "pass";
+
+	function login($user,$pass){
+		if($user == $this->user && $pass == $this->pass){
+			return true;
+		}else{
+			return false;
+		}
+	}
+}
+?>

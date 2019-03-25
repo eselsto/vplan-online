@@ -1,0 +1,59 @@
+/* CSS Document */
+html, body {
+	border: 0;
+  height: 100%;
+	  margin: 0px; 
+}
+.logo{
+	width: 15%;
+	height: 4%;
+	background-color: #3193c0;
+	float: left;
+	font-size: 20px;
+	text-align: center;
+	text-align-last: center;
+}
+.header{
+	background-color: lightgray;
+	border: none; 
+	margin: 0px; 
+	padding:0; 
+	height:4%; 
+	width:85%;
+	float: right;
+}
+.statusicon{
+	background-color: #72FF48;
+	width: 10%;
+	height: 100%;
+	float: left;
+	text-align: center;
+	
+}
+.logoutbutton{
+	background-color: transparent;
+	width: 10%;
+	height: 100%;
+	float: right;
+	
+}
+
+.sidebar{
+	background-color: lightgray;
+	border: none; 
+	margin: 0px; 
+	height:96%; 
+	width:15%;
+	float: left;
+}
+.sidebarcontent{
+	background-color: transparent;
+	width: 80%;
+	height: 95%;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: auto;
+	margin-top: 5%;
+	line-height: 2;
+	
+}
