@@ -54,7 +54,8 @@ require_once($subsite.'.php');
 <div style="height: 10px;"><space></space></div>
 <div style="position: fixed;bottom: 0;margin: 0 auto;background-color: white;width: 100%">
 <h4>
-	<a href="https://gitlab.com/witt-oks/vertretungsplan-online">Vertretungsplan</a> - © Copyright 2017 - <?php echo date("Y")?> Nils Witt
+	<a href="https://gitlab.com/witt-oks/vertretungsplan-online">Vertretungsplan</a> - © Copyright 2017 - <?php echo date("Y")?> Nils Witt - 
+	<a href="https://gitlab.com/witt-oks/vertretungsplan-online/issues">Issue / Idea Tracking<a>
 </h4>
 </div>
 </body></html>
