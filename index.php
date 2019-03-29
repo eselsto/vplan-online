@@ -1,4 +1,5 @@
 <?php
+header('Content-Type: text/html; charset=UTF-8');
 require_once("config.php");
 $config = new config;
 if($config->https){
@@ -9,15 +10,15 @@ if($config->https){
 			exit();
 	}
 }
-$user = $_SERVER['PHP_AUTH_USER'];
-$pass = $_SERVER['PHP_AUTH_PW'];
-if (!$config->login($user,$pass)) {
-	header('WWW-Authenticate: Basic realm="Vertretungsplan"');
-	header('HTTP/1.0 401 Unauthorized');
-	die ("Not authorized");
+if(isset($_SERVER['PHP_AUTH_USER'])){
+	if (!$config->login($user,$pass)) {
+		header('WWW-Authenticate: Basic realm="Vertretungsplan"');
+		header('HTTP/1.0 401 Unauthorized');
+		die ("Not authorized");
+	}
+	$user = $_SERVER['PHP_AUTH_USER'];
+	$pass = $_SERVER['PHP_AUTH_PW'];
 }
-
-
 
 $langhtmlonliverttitle = "Vertretungsplan";
 
@@ -35,11 +36,6 @@ $langhtmlonliverttablerowfive = "Vert.";
 $langhtmlonliverttablerowsix = "Raum neu";
 $langhtmlonliverttablerowseven = "Bemerkung";
 
-
-
-header('Content-Type: text/html; charset=UTF-8');
-
-
 if(isset($_GET["subsite"])){
 	$subsite = htmlspecialchars($_GET["subsite"]);
 }else{
@@ -49,6 +45,7 @@ if(isset($_GET["subsite"])){
 if ($subsite == ""){
 	$subsite = "vertretungsplan";
 }
+
 echo
 "<!doctype html>
 <html lang=DE>
@@ -68,6 +65,7 @@ echo
 echo "<body>";
 require_once('menus.php');
 require_once($subsite.'.php');
-echo "</body></html>";
-
 ?>
+<div style="height: 10px;"><space></space></div>
+<div style="position: fixed;bottom: 0;margin: 0 auto;background-color: white;width: 100%"><h4><a href="https://gitlab.com/witt-oks/vertretungsplan-online">Vertretungsplan</a> - © Copyright 2017 - <?php echo date("Y")?> Nils Witt</h4></div>
+</body></html>

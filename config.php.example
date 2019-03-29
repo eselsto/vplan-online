@@ -3,6 +3,7 @@ class config{
 	public $url_web = "https://localhost";
 	public $url_api = "https://localhost/api/";
 	public $api_secret = "test";
+	public $https = false;
 	private $user = "user";
 	private $pass = "pass";
 
