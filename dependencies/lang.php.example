@@ -1,0 +1,19 @@
+<?php
+
+$langhtmlonliverttitle = "Vertretungsplan";
+
+$langhtmlonlivertheadline = "Vertretungsplan";
+$langhtmlonlivertunderlineone = "Bitte achte bei jeder Vertretungsstunde darauf, dass auch wirklich dein Kurs gemeint ist.";
+$langhtmlonlivertunderlinetwo = "letzte Aktualisierung:";
+$langhtmlonlivertdayhead = "Vertretungsplan f&uuml;r";
+$langhtmlonlivertdayunterline = "Ge&auml;nderte Aufsichten:";
+
+$langhtmlonliverttablerowone = "Klasse";
+$langhtmlonliverttablerowtwo= "Std.";
+$langhtmlonliverttablerowthree = "Fach";
+$langhtmlonliverttablerowfour = "Fach neu";
+$langhtmlonliverttablerowfive = "Vert.";
+$langhtmlonliverttablerowsix = "Raum neu";
+$langhtmlonliverttablerowseven = "Bemerkung";
+
+?>

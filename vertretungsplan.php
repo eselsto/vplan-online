@@ -1,7 +1,7 @@
 <?php
 function monat($monat){
 	$monate = array();
-	$monate[] = "Januar";
+	$monate[] = "";
 	$monate[] = "Januar";
 	$monate[] = "Februar";
 	$monate[] = "März";
@@ -78,13 +78,15 @@ foreach ($data["info"]["days"] as $day) {
 		//Preprocessing
 		for($i = 0;$i < count($vertretungen);$i++){
 			$ident = false;
-			if($vertretungen[$i]['Kurs'] == $vertretungen[$i+1]['Kurs']){
-				if($vertretungen[$i]['Fach'] == $vertretungen[$i+1]['Fach']){
-					if($vertretungen[$i]['Fach-new'] == $vertretungen[$i+1]['Fach-new']){
-						if($vertretungen[$i]['Lehrer-neu'] == $vertretungen[$i+1]['Lehrer-neu']){
-							if($vertretungen[$i]['Raum-new'] == $vertretungen[$i+1]['Raum-new']){
-								if($vertretungen[$i]['info'] == $vertretungen[$i+1]['info']){
-									$ident = true;
+			if(isset($vertretungen[$i+1])){
+				if($vertretungen[$i]['Kurs'] == $vertretungen[$i+1]['Kurs']){
+					if($vertretungen[$i]['Fach'] == $vertretungen[$i+1]['Fach']){
+						if($vertretungen[$i]['Fach-new'] == $vertretungen[$i+1]['Fach-new']){
+							if($vertretungen[$i]['Lehrer-neu'] == $vertretungen[$i+1]['Lehrer-neu']){
+								if($vertretungen[$i]['Raum-new'] == $vertretungen[$i+1]['Raum-new']){
+									if($vertretungen[$i]['info'] == $vertretungen[$i+1]['info']){
+										$ident = true;
+									}
 								}
 							}
 						}

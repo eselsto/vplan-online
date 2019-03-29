@@ -1,6 +1,7 @@
 <?php
 header('Content-Type: text/html; charset=UTF-8');
 require_once("config.php");
+require_once("dependencies/lang.php");
 $config = new config;
 if($config->https){
 	if(empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] == "off"){
@@ -19,22 +20,6 @@ if(isset($_SERVER['PHP_AUTH_USER'])){
 	$user = $_SERVER['PHP_AUTH_USER'];
 	$pass = $_SERVER['PHP_AUTH_PW'];
 }
-
-$langhtmlonliverttitle = "Vertretungsplan";
-
-$langhtmlonlivertheadline = "Vertretungsplan der Otto-K&uuml;hne-Schule";
-$langhtmlonlivertunderlineone = "Bitte achte bei jeder Vertretungsstunde darauf, dass auch wirklich dein Kurs gemeint ist.";
-$langhtmlonlivertunderlinetwo = "letzte Aktualisierung:";
-$langhtmlonlivertdayhead = "Vertretungsplan f&uuml;r";
-$langhtmlonlivertdayunterline = "Ge&auml;nderte Aufsichten:";
-
-$langhtmlonliverttablerowone = "Klasse";
-$langhtmlonliverttablerowtwo= "Std.";
-$langhtmlonliverttablerowthree = "Fach";
-$langhtmlonliverttablerowfour = "Fach neu";
-$langhtmlonliverttablerowfive = "Vert.";
-$langhtmlonliverttablerowsix = "Raum neu";
-$langhtmlonliverttablerowseven = "Bemerkung";
 
 if(isset($_GET["subsite"])){
 	$subsite = htmlspecialchars($_GET["subsite"]);
@@ -67,5 +52,9 @@ require_once('menus.php');
 require_once($subsite.'.php');
 ?>
 <div style="height: 10px;"><space></space></div>
-<div style="position: fixed;bottom: 0;margin: 0 auto;background-color: white;width: 100%"><h4><a href="https://gitlab.com/witt-oks/vertretungsplan-online">Vertretungsplan</a> - © Copyright 2017 - <?php echo date("Y")?> Nils Witt</h4></div>
+<div style="position: fixed;bottom: 0;margin: 0 auto;background-color: white;width: 100%">
+<h4>
+	<a href="https://gitlab.com/witt-oks/vertretungsplan-online">Vertretungsplan</a> - © Copyright 2017 - <?php echo date("Y")?> Nils Witt
+</h4>
+</div>
 </body></html>
