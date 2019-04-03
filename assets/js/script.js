@@ -14,7 +14,7 @@ function loadActive(){
 		  adjusttextareas();
       }
     };
-    activeHttp.open("GET", "xmlhttp/load-active.php", true);
+    activeHttp.open("GET", "xmlhttp/xmlhttpAushang.php?action=load", true);
     activeHttp.send(); 
 }
 
@@ -26,7 +26,7 @@ function removeElementFromApi(id){
 			$.notify("Gelöscht", "success");
         }
       };
-    remHttp.open("POST", "xmlhttp/deleteFromApi.php");
+    remHttp.open("POST", "xmlhttp/xmlhttpAushang.php?action=delete");
     remHttp.setRequestHeader("Content-Type", "application/json");
     remHttp.send(JSON.stringify({"id": id}));
 }
@@ -51,7 +51,7 @@ function addElementFromWeb(){
 			$.notify("Erstellt", "success");
         }
       };
-    createHttp.open("POST", "xmlhttp/createToApi.php");
+    createHttp.open("POST", "xmlhttp/xmlhttpAushang.php?action=create");
     createHttp.setRequestHeader("Content-Type", "application/json");
     createHttp.send(json);
 	$.notify("Bitte warten", "info");
@@ -97,7 +97,7 @@ function updateToApi(id){
         }
       };
 	
-    editHttp.open("POST", "xmlhttp/editToApi.php");
+    editHttp.open("POST", "xmlhttp/xmlhttpAushang.php?action=update");
     editHttp.setRequestHeader("Content-Type", "application/json");
 	if(inhalt2 != null){
 		editHttp.send(JSON.stringify({"id": id,"inhalt1": inhalt,"inhalt2": inhalt2,"color":newColor}));
@@ -113,7 +113,7 @@ function moveElement(id,direction){
           loadActive();
         }
       };
-    moveHttp.open("POST", "xmlhttp/updateOrder.php");
+    moveHttp.open("POST", "xmlhttp/xmlhttpAushang.php?action=move");
     moveHttp.setRequestHeader("Content-Type", "application/json");
     moveHttp.send(JSON.stringify({"id": id,"direction": direction}));
 
