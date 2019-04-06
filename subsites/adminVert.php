@@ -2,9 +2,10 @@
 $secret = "5505651335991874906727434381013929667054747212136096169855893106917354911560532310094";
 
 function curlToApi($json,$urlargs){
+    global $config;
     $curl = curl_init();
     curl_setopt_array($curl, array(
-    CURLOPT_URL => "http://localhost/Vertretungsplan/api/vertretungsplan.php?$urlargs",
+    CURLOPT_URL => $config->url_api."/vertretungsplan.php?$urlargs",
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
