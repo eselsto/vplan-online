@@ -1,5 +1,5 @@
 <?php
-$secret = "5505651335991874906727434381013929667054747212136096169855893106917354911560532310094";
+$secret = $config->api_secret;
 
 function curlToApi($json,$urlargs){
     global $config;
@@ -99,9 +99,7 @@ function loadXml(){
     $error_aufs = "";
     
     $xml = simplexml_load_file(__DIR__.'/../ImportFiles/Vertretungsplan Lehrer.xml');
-    if($xml){
-        echo "loaded";
-    }else{
+    if(!$xml){
         die("XML File not found");
     }
     foreach($xml->children() as $child){
@@ -259,5 +257,5 @@ if(isset($activeData["data"]["vertretungen"])){
 }
 
 $response = curlToApi(json_encode($xmlData),"secret=$secret&mode=edit");
-echo $response;
+echo "<h1>Completed</h1>"
 ?>
