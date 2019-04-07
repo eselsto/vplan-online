@@ -28,7 +28,6 @@ if(isset($_SERVER['PHP_AUTH_USER'])){
 	header('HTTP/1.0 401 Unauthorized');
 	die ("Not authorized");
 }
-
 if(isset($_GET["subsite"])){
 	$subsite = htmlspecialchars($_GET["subsite"]);
 }else{
@@ -37,6 +36,12 @@ if(isset($_GET["subsite"])){
 
 if ($subsite == ""){
 	$subsite = "vertretungsplan";
+}
+
+if(substr($subsite,0,5) == "admin" AND !$admin){
+	header('WWW-Authenticate: Basic realm="Vertretungsplan"');
+	header('HTTP/1.0 401 Unauthorized');
+	die();
 }
 
 ?>
