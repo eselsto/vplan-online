@@ -1,5 +1,33 @@
 <?php
 $secret = $config->api_secret;
+$lessons = array();
+$lessons[1] = array();
+$lessons[1]["begin"] = "07:50";
+$lessons[1]["end"] = "07:50";
+
+$lessons[2] = array();
+$lessons[2]["begin"] = "08:35";
+$lessons[2]["end"] = "09:20";
+
+$lessons[3] = array();
+$lessons[3]["begin"] = "09:40";
+$lessons[3]["end"] = "10:25";
+
+$lessons[4] = array();
+$lessons[4]["begin"] = "10:30";
+$lessons[4]["end"] = "11:15";
+
+$lessons[5] = array();
+$lessons[5]["begin"] = "11:35";
+$lessons[5]["end"] = "12:20";
+
+$lessons[6] = array();
+$lessons[6]["begin"] = "12:20";
+$lessons[6]["end"] = "13:05";
+
+$lessons[7] = array();
+$lessons[7]["begin"] = "13:15";
+$lessons[7]["end"] = "14:00";
 
 function curlToApi($json,$urlargs){
     global $config;
@@ -25,20 +53,33 @@ function convertStdToTime($std,$lessons){
 		$stunden = explode("-",$std);
 		$von = $lessons[substr($stunden[0],0,1)]["begin"].":00";
 		$bis = $lessons[substr($stunden[1],0,1)]["end"].":00";
+		//print_r($stunden);
+		//echo $von."<br>";
 		return array($von,$bis);
 	}else{
 		$stunden = explode("-",$std);
-		return array($stunden[0],$stunden[1]);
+		$von = $stunden[0];
+		$bis = $stunden[1];
+		if(isTime($stunden[0].":00")){
+			$von = $stunden[0].":00";
+		}
+		if(isTime($stunden[1].":00")){
+			$bis = $stunden[1].":00";
+		}
+		return array($von,$bis);
 	}
 }
 
 function isTime($time) {
-    if (preg_match("/^([1-2][0-3]|[01]?[1-9]):([0-5]?[0-9]):([0-5]?[0-9])$/", $time))
-        return true;
+    if (preg_match("/^([1-2][0-3]|[01]?[1-9]):([0-5]?[0-9]):([0-5]?[0-9])$/", $time)){
+		return true;
+	}
+       
     return false;
 }
 
 function xmlToArray($xml){
+	global $lessons;
     for($i = 0; $i < count($xml); $i++){
 
         $exceldatum = $xml->klausur[$i]->datum;
@@ -70,7 +111,7 @@ function xmlToArray($xml){
         if($sieben == ""){$sieben = "-";
         }
     
-        $time = convertStdToTime($std,$config["lessons"]);
+        $time = convertStdToTime($std,$lessons);
         $von = $time[0];
         $bis = $time[1];
     
@@ -99,10 +140,11 @@ function xmlToArray($xml){
         }else{
             $dataset["from"] = "00:00:00";
         }
+		//echo $von."<br>";
         if(isTime(json_decode(json_encode($bis),true))){
-            $dataset["to"] = json_decode(json_encode($bis),true);
+            $dataset["to"] = $bis;
         }else{
-            $dataset["to"] = "00:00:00";
+            $dataset["to"] = "16:00:00";
         }
         if(json_decode(json_encode($lehrer),true)[0] != NULL){
             $dataset["teacher"] = json_decode(json_encode($lehrer),true)[0];
@@ -110,7 +152,6 @@ function xmlToArray($xml){
             $dataset["teacher"] = "---";
         }
         
-
         $data[] = $dataset;
     }
     return $data;
@@ -134,6 +175,6 @@ $insert["type"] = "klausuren";
 $insert["data"] = xmlToArray($xml);
 
 $response = curlToApi(json_encode(array($insert)),"secret=$secret&mode=edit");
-
+//echo json_encode(array($insert));
 echo "<h1>Completed</h1>"
 ?>
