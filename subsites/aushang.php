@@ -23,14 +23,14 @@ foreach($aushangdata as $row){
 	if($zweispalten){
 
 		echo '<tr height=24 style="height:18.0pt">
-			<td colspan=1 height=24 class="aushang" style="background-color:'.$row->Color.';height:18.0pt;">'.$row->Content.'</td>';
+			<td colspan=1 height=24 class="aushang" style="background-color:'.$row->Color.';height:18.0pt;">'.nl2br($row->Content).'</td>';
 
-		echo '<td colspan=1 height=24 class="aushang" style="background-color:'.$row->Color.';height:18.0pt;">'.$row->Content2.'</td>
+		echo '<td colspan=1 height=24 class="aushang" style="background-color:'.$row->Color.';height:18.0pt;">'.nl2br($row->Content2).'</td>
 		</tr>'; 
 
 	}else{
 		echo '<tr height=24 style="height:18.0pt">
-						<td colspan=2 height=24 class="aushang" style=background-color:'.$row->Color.'; style="height:18.0pt;">'.$row->Content.'</td>
+						<td colspan=2 height=24 class="aushang" style=background-color:'.$row->Color.'; style="height:18.0pt;">'.nl2br($row->Content).'</td>
 						</tr>';
 		
 	}
