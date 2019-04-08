@@ -33,7 +33,7 @@
 					<td scope="row"><button type="button" class="btn btn-success" onclick="addElementFromWeb()"><i class="material-icons">add_box</i></button></td>
 					<td><textarea class="form-control" id="web.0.inhalt" rows="4"></textarea></td>
 					<td><textarea class="form-control" id="web.0.inhalt2" rows="4"></textarea></td>
-					<td>
+					<td style="width: 250px">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<label class="input-group-text" for="colorselect">Farbe</label>
