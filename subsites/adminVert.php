@@ -158,7 +158,6 @@ function loadXml(){
                 $event["zeit"] = explode(":", $data)[0].":".explode(":", $data)[1];
                 $event["lehrer"] = trim(explode("-->", $data)[1], " \t\n\r\0\x0B");
                 $event["ort"] = trim(explode("-", $data)[1], " \t\n\r\0\x0B") ;
-                $event["id"] = "";
                 array_push($aufsichten,$event);
             }
         }
@@ -175,6 +174,7 @@ function loadXml(){
 	$vertretung = json_decode($trans,true);
 	
 	foreach($vertretung as $entry){
+		$dataset = array();
 		$dataset["date"] = $entry["date"];
 		$dataset["lesson"] = $entry["stunde"][0];
 		$dataset["subject"] = $entry["fach"][0];
@@ -200,7 +200,33 @@ function loadXml(){
 	$data["days"] = $days;
 	
     $output[] = $data;
-    $i = 0;
+    
+	
+	
+	$trans = json_encode($aufsichten);
+	$aufsichten = json_decode($trans,true);
+	
+	$entrys = array();
+	
+	foreach($aufsichten as $entry){
+		$dataset = array();
+		$dataset["date"] = $entry["date"];
+		$dataset["time"] = $entry["zeit"];
+		$dataset["teacher"] = $entry["lehrer"];
+		$dataset["location"] = $entry["ort"];
+		
+		$entrys[] = $dataset;
+	}
+	$data = array();
+    $data["mode"] = "insert";
+    $data["type"] = "aufsichten";
+	$data["data"] = $entrys;
+	$output[] = $data;
+	
+	//echo json_encode($data);
+	
+	$i = 0;
+	
     foreach($days as $day){
         if($i == 0){
             $dates = $day;
@@ -214,18 +240,14 @@ function loadXml(){
     $refreshed = json_encode($refreshed);
     $refreshed = json_decode($refreshed,true);
     $output[] = array("mode" =>"update","type" => "config","data" => array("activeDates" => $dates,"lastRefreshed" => $refreshed[0]));
+    //$output[] = array("mode" =>"insert","type" => "aufsichten","data" => $aufsichten);
     return $output;
 }
 
-
-
-$xmlData = loadXml();
-
-
-
+$insert = loadXml();
 
 $i = 0;
-foreach($xmlData[0]["days"] as $day){
+foreach($insert[0]["days"] as $day){
     if($i == 0){
         $dates = $day;
         $i = 1;
@@ -235,12 +257,14 @@ foreach($xmlData[0]["days"] as $day){
 }
 
 $data = curlToApi("","secret=$secret&dates=$dates");
-
+//echo $data;
 $activeData = json_decode($data,true);
+
+$delete = array();
 
 if(isset($activeData["data"]["vertretungen"])){
     $activeIds = array();
-    $deleteData = array();
+    $deleteVert = array();
 
     foreach($activeData["data"]["vertretungen"] as $dates){
         foreach($dates as $event){
@@ -248,14 +272,35 @@ if(isset($activeData["data"]["vertretungen"])){
         }
     }
 
-   
+    $deleteVert["mode"] = "delete";
+    $deleteVert["type"] = "vertretungen";
+    $deleteVert["data"] = $activeIds;
 
-    $deleteData["mode"] = "delete";
-    $deleteData["data"] = $activeIds;
-
-    $response = curlToApi(json_encode(array($deleteData)),"secret=$secret&mode=edit");
+    //$response = curlToApi(json_encode(array($deleteVert)),"secret=$secret&mode=edit");
+	$delete[] = $deleteVert;
+	//echo json_encode(array($deleteData));
 }
 
-$response = curlToApi(json_encode($xmlData),"secret=$secret&mode=edit");
+if(isset($activeData["data"]["aufsichten"])){
+    $activeIds = array();
+    $deleteAufsichten = array();
+
+    foreach($activeData["data"]["aufsichten"] as $dates){
+        foreach($dates as $event){
+            $activeIds[] = $event["id"];
+        }
+    }
+
+    $deleteAufsichten["mode"] = "delete";
+    $deleteAufsichten["type"] = "aufsichten";
+    $deleteAufsichten["data"] = $activeIds;
+
+    //$deleted = 
+	$delete[] = $deleteAufsichten;
+	//echo json_encode(array($deleteAushang));
+}
+$deleted = curlToApi(json_encode($delete),"secret=$secret&mode=edit");
+$inserted = curlToApi(json_encode($insert),"secret=$secret&mode=edit");
+echo json_encode($insert);
 echo "<h1>Completed</h1>"
 ?>
