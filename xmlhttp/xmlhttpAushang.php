@@ -85,7 +85,7 @@ if($action == "create"){
                 </td>
                 <td style="background-color:'.$row->Color.'"><textarea id="textarea.'.$row->ID.'.inhalt" class="form-control" onkeyup="textAreaAdjust(this)" disabled>'.$row->Content.'</textarea></td>
                 <td style="background-color:'.$row->Color.'"><textarea id="textarea.'.$row->ID.'.inhalt2" class="form-control" onkeyup="textAreaAdjust(this)" disabled>'.$row->Content2.'</textarea></td>
-                <td>'.$colorselect.'</td>
+                <td style="background-color:'.$row->Color.'">'.$colorselect.'</td>
             </tr>';
         }else{
             echo '<tr id="row.'.$row->ID.'">
