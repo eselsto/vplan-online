@@ -6,8 +6,6 @@ class config{
 	public $https = false;
 	private $user = "user";
 	private $pass = "pass";
-	private $userAdmin = "admin";
-	private $passAdmin = "passs";
 
 	function login($user,$pass){
 		if($user == $this->user && $pass == $this->pass){
@@ -16,13 +14,5 @@ class config{
 			return false;
 		}
 	}
-	function loginAdmin($user,$pass){
-		if($user == $this->userAdmin && $pass == $this->passAdmin){
-			return true;
-		}else{
-			return false;
-		}
-	}
 }
-
 ?>
