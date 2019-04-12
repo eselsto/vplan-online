@@ -5,7 +5,7 @@ function curlToApi($json,$urlargs){
     global $config;
     $curl = curl_init();
     curl_setopt_array($curl, array(
-    CURLOPT_URL => $config->url_api."/vertretungsplan.php?$urlargs",
+    CURLOPT_URL => $config->url_api."/vertretungsplan.php?".$urlargs,
     CURLOPT_RETURNTRANSFER => true,
     CURLOPT_ENCODING => "",
     CURLOPT_MAXREDIRS => 10,
@@ -91,12 +91,8 @@ function loadXml(){
     $i = 1;
     $vertretung = array();
     $aufsichten = array();
-    $tranfered_vert = "";
-    $error_vert = "";
-    $tranfered_days = "";
-    $error_days = "";
-    $tranfered_aufs = "";
-    $error_aufs = "";
+    $date = "";
+    $refreshed = "";
     
     $xml = simplexml_load_file(__DIR__.'/../ImportFiles/Vertretungsplan Lehrer.xml');
     if(!$xml){
@@ -192,7 +188,6 @@ function loadXml(){
 		$dataset["info"] = $entry["info"][0];
 		$dataset["id"] = $entry["id"];
 		
-		
 		$entrys[] = $dataset;
 	}
 	
@@ -201,8 +196,6 @@ function loadXml(){
 	
     $output[] = $data;
     
-	
-	
 	$trans = json_encode($aufsichten);
 	$aufsichten = json_decode($trans,true);
 	
@@ -221,12 +214,11 @@ function loadXml(){
     $data["mode"] = "insert";
     $data["type"] = "aufsichten";
 	$data["data"] = $entrys;
+
 	$output[] = $data;
-	
-	//echo json_encode($data);
-	
+		
 	$i = 0;
-	
+	$dates = "";
     foreach($days as $day){
         if($i == 0){
             $dates = $day;
@@ -240,7 +232,6 @@ function loadXml(){
     $refreshed = json_encode($refreshed);
     $refreshed = json_decode($refreshed,true);
     $output[] = array("mode" =>"update","type" => "config","data" => array("activeDates" => $dates,"lastRefreshed" => $refreshed[0]));
-    //$output[] = array("mode" =>"insert","type" => "aufsichten","data" => $aufsichten);
     return $output;
 }
 
@@ -256,8 +247,7 @@ foreach($insert[0]["days"] as $day){
     }
 }
 
-$data = curlToApi("","secret=$secret&dates=$dates");
-//echo $data;
+$data = curlToApi("","secret=".$secret."&dates=".$dates);
 $activeData = json_decode($data,true);
 
 $delete = array();
@@ -276,9 +266,7 @@ if(isset($activeData["data"]["vertretungen"])){
     $deleteVert["type"] = "vertretungen";
     $deleteVert["data"] = $activeIds;
 
-    //$response = curlToApi(json_encode(array($deleteVert)),"secret=$secret&mode=edit");
-	$delete[] = $deleteVert;
-	//echo json_encode(array($deleteData));
+    $response = curlToApi(json_encode(array($deleteVert)),"secret=".$secret."&mode=edit");
 }
 
 if(isset($activeData["data"]["aufsichten"])){
@@ -294,13 +282,9 @@ if(isset($activeData["data"]["aufsichten"])){
     $deleteAufsichten["mode"] = "delete";
     $deleteAufsichten["type"] = "aufsichten";
     $deleteAufsichten["data"] = $activeIds;
-
-    //$deleted = 
-	$delete[] = $deleteAufsichten;
-	//echo json_encode(array($deleteAushang));
+	
+$response = curlToApi(json_encode(array($deleteAufsichten)),"secret=".$secret."&mode=edit");
 }
-$deleted = curlToApi(json_encode($delete),"secret=$secret&mode=edit");
-$inserted = curlToApi(json_encode($insert),"secret=$secret&mode=edit");
-echo json_encode($insert);
+$inserted = curlToApi(json_encode($insert),"secret=".$secret."&mode=edit");
 echo "<h1>Completed</h1>"
 ?>
