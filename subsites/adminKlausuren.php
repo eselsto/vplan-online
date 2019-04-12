@@ -80,6 +80,7 @@ function isTime($time) {
 
 function xmlToArray($xml){
 	global $lessons;
+    $data = array();
     for($i = 0; $i < count($xml); $i++){
 
         $exceldatum = $xml->klausur[$i]->datum;
@@ -140,7 +141,6 @@ function xmlToArray($xml){
         }else{
             $dataset["from"] = "00:00:00";
         }
-		//echo $von."<br>";
         if(isTime(json_decode(json_encode($bis),true))){
             $dataset["to"] = $bis;
         }else{
