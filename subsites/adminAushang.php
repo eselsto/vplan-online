@@ -12,7 +12,8 @@
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
         <link href="assets/css/style.css" rel="stylesheet" type="text/css">
-		<script src="assets/js/script.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/dataProcessing.js"></script>
 		<table class="table table-bordered table-fixed">
 			<thead id="header" style="background-color: white; z-index: 100">
 				<tr>
@@ -27,18 +28,19 @@
 			<tbody id="active">
 			
 			</tbody>
+
 			<tbody id="footer">
 				<tr>
 					<td>+</td>
 					<td scope="row"><button type="button" class="btn btn-success" onclick="addElementFromWeb()"><i class="material-icons">add_box</i></button></td>
-					<td><textarea class="form-control" id="web.0.inhalt" rows="4"></textarea></td>
-					<td><textarea class="form-control" id="web.0.inhalt2" rows="4"></textarea></td>
+                    <td><textarea class="form-control" id="web.0.content" rows="4"></textarea></td>
+                    <td><textarea class="form-control" id="web.0.content2" rows="4"></textarea></td>
 					<td style="width: 250px">
 						<div class="input-group mb-3">
 							<div class="input-group-prepend">
 								<label class="input-group-text" for="colorselect">Farbe</label>
 							</div>
-							<select class="custom-select" id="colors">
+                            <select class="custom-select" id="web.0.color">
 								<option value="none" selected>Auswählen...</option>
 								<option value="red">Rot</option>
 								<option value="yellow">Gelb</option>
@@ -52,6 +54,13 @@
 					</td>
 				</tr>
 			</tbody>
-		</table>
-		<h5>Bei Fehlern mit Strg + F5 aktualisieren</h5>
-		<script src="assets/js/notify.js"></script>
+            <tbody>
+            <tr>
+                <td colspan="5" style="text-align: center"><h4>Presets</h4></td>
+            </tr>
+            </tbody>
+            <tbody id="presets"></tbody>
+
+        </table>
+
+<script src="assets/js/notify.js"></script>

@@ -10,8 +10,13 @@ function curlToApi($config,$mode,$json){
     curl_setopt($ch, CURLOPT_HTTPHEADER, array(
         'Content-Type: application/json',
         'Content-Length: ' . strlen($json))
-    );   
-    return curl_exec($ch);
+    );
+    $result = curl_exec($ch);
+    if (curl_errno($ch)) {
+        $result = curl_error($ch);
+        curl_close($ch);
+    }
+    return $result;
 }
 
 function activeSelect($color,$id){
@@ -34,10 +39,10 @@ function activeSelect($color,$id){
         }else{
             $output .= "<option value=".key($colors).">".$colors[key($colors)]."</option>";
         }
-        
+
         next($colors);
     }
-        
+
         $output .= '</select></div>';
     return $output;
 }
@@ -51,12 +56,16 @@ $action = htmlspecialchars($_GET["action"]);
 
 if($action == "create"){
     echo curlToApi($config,"create",$json);
+} elseif ($action == "createPreset") {
+    echo curlToApi($config, "createPreset", $json);
 }elseif($action == "delete"){
     echo curlToApi($config,"delete",$json);
 }elseif($action == "update"){
     echo curlToApi($config,"update",$json);
 }elseif($action == "move"){
     echo curlToApi($config,"updateOrder",$json);
+} elseif ($action == "movePreset") {
+    echo curlToApi($config, "updateOrderPreset", $json);
 }elseif($action == "load"){
     $json = file_get_contents($config->url_api.'/aushang.php?aushang=1&secret='.$config->api_secret);
     $aushangdata = json_decode($json);
@@ -71,7 +80,7 @@ if($action == "create"){
         }
         $colorselect = activeSelect($row->Color,$row->ID);
         if($zweispalten){
-            
+
             echo '<tr id="row.'.$row->ID.'">
                 <td style="max-width:10px">'.$row->Order.'</td>
                 <td>
@@ -79,12 +88,12 @@ if($action == "create"){
                         <button type="button" class="btn btn-danger" onClick="removeElementFromApi('.$row->ID.')" ><i class="material-icons">delete_forever</i></button>
                         <button type="button" class="btn btn-warning" id="edit.'.$row->ID.'" onClick="editElementFromApi('.$row->ID.')" ><i class="material-icons">edit</i></button>
                         <button type="button" class="btn btn-success" id="save.'.$row->ID.'" onClick="updateToApi('.$row->ID.')" style="display: none;"><i class="material-icons">save</i></button>
-                        <button type="button" class="btn btn-primary" onClick="moveElement('.$row->ID.',\'up\')"><i class="material-icons">arrow_upward</i></button>
-                        <button type="button" class="btn btn-primary"onClick="moveElement('.$row->ID.',\'down\')" ><i class="material-icons">arrow_downward</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'up\',\'1\')"><i class="material-icons">arrow_upward</i></button>
+                        <button type="button" class="btn btn-primary"onClick="moveElement(' . $row->ID . ',\'down\',\'1\')" ><i class="material-icons">arrow_downward</i></button>
                     </div>
                 </td>
-                <td style="background-color:'.$row->Color.'"><textarea id="textarea.'.$row->ID.'.inhalt" class="form-control" onkeyup="textAreaAdjust(this)" disabled>'.$row->Content.'</textarea></td>
-                <td style="background-color:'.$row->Color.'"><textarea id="textarea.'.$row->ID.'.inhalt2" class="form-control" onkeyup="textAreaAdjust(this)" disabled>'.$row->Content2.'</textarea></td>
+                <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content . '</textarea></td>
+                <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content2" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content2 . '</textarea></td>
                 <td style="background-color:'.$row->Color.'">'.$colorselect.'</td>
             </tr>';
         }else{
@@ -95,19 +104,73 @@ if($action == "create"){
                         <button type="button" class="btn btn-danger" onClick="removeElementFromApi('.$row->ID.')" ><i class="material-icons">delete_forever</i></button>
                         <button type="button" class="btn btn-warning" id="edit.'.$row->ID.'" onClick="editElementFromApi('.$row->ID.')" ><i class="material-icons">edit</i></button>
                         <button type="button" class="btn btn-success" id="save.'.$row->ID.'" onClick="updateToApi('.$row->ID.')" style="display: none;"><i class="material-icons">save</i></button>
-                        <button type="button" class="btn btn-primary" onClick="moveElement('.$row->ID.',\'up\')"><i class="material-icons">arrow_upward</i></button>
-                        <button type="button" class="btn btn-primary" onClick="moveElement('.$row->ID.',\'down\')" ><i class="material-icons">arrow_downward</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'up\',\'1\')"><i class="material-icons">arrow_upward</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'down\',\'1\')" ><i class="material-icons">arrow_downward</i></button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-primary" onClick="addElementToPresets(' . $row->ID . ')" ><i class="material-icons">archive</i></button>
                     </div>
                 </td>
-                <td style="background-color:'.$row->Color.'"><textarea id="textarea.'.$row->ID.'.inhalt" class="form-control" onkeyup="textAreaAdjust(this)" disabled>'.$row->Content.'</textarea></td>
+                <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content . '</textarea></td>
                 <td style="background-color:'.$row->Color.'"></td>
                 <td style="background-color:'.$row->Color.'">'.$colorselect.'</td>
                 <!--<td style="background-color:'.$row->Color.'"></td>-->
             </tr>';
         }
-            
-        
+
+
+    }
+} elseif ($action == "presets") {
+    $json = file_get_contents($config->url_api . '/aushang.php?aushang=presets&secret=' . $config->api_secret);
+    $aushangdata = json_decode($json);
+
+    foreach ($aushangdata as $row) {
+        if (!isset($row->spalten)) {
+            $zweispalten = false;
+        } elseif ($row->spalten == "true") {
+            $zweispalten = true;
+        } else {
+            $zweispalten = false;
+        }
+        $colorselect = activeSelect($row->Color, $row->ID);
+        if ($zweispalten) {
+
+            echo '<tr id="row.' . $row->ID . '">
+                <td style="max-width:10px">' . $row->Order . '</td>
+                <td>
+                    <div class="btn-group" role="group" aria-label="Basic example">
+                        <button type="button" class="btn btn-success" onClick="addElementFromPresets(' . $row->ID . ')" ><i class="material-icons">add_box</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'up\',\'3\')"><i class="material-icons">arrow_upward</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'down\',\'3\')" ><i class="material-icons">arrow_downward</i></button>
+                        <button type="button" class="btn btn-danger" onClick="removeElementFromApi(' . $row->ID . ')" ><i class="material-icons">delete_forever</i></button>
+                                                <button type="button" class="btn btn-warning" id="edit.' . $row->ID . '" onClick="editElementFromApi(' . $row->ID . ')" ><i class="material-icons">edit</i></button>
+                        <button type="button" class="btn btn-success" id="save.' . $row->ID . '" onClick="updateToApi(' . $row->ID . ')" style="display: none;"><i class="material-icons">save</i></button>
+                    </div>
+                </td>
+                <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content . '</textarea></td>
+                <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content2" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content2 . '</textarea></td>
+                <td style="background-color:' . $row->Color . '">' . $colorselect . '</td>
+            </tr>';
+        } else {
+            echo '<tr id="row.' . $row->ID . '">
+                <td style="max-width:10px">' . $row->Order / 10 . '</td>
+                <td style="max-width:100px">
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-danger" onClick="removeElementFromApi(' . $row->ID . ')" ><i class="material-icons">delete_forever</i></button>
+                        <button type="button" class="btn btn-warning" id="edit.' . $row->ID . '" onClick="editElementFromApi(' . $row->ID . ')" ><i class="material-icons">edit</i></button>
+                        <button type="button" class="btn btn-success" id="save.' . $row->ID . '" onClick="updateToApi(' . $row->ID . ')" style="display: none;"><i class="material-icons">save</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'up\',\'3\')"><i class="material-icons">arrow_upward</i></button>
+                        <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'down\',\'3\')" ><i class="material-icons">arrow_downward</i></button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-success" onClick="addElementFromPresets(' . $row->ID . ')" ><i class="material-icons">unarchive</i></button>
+                    </div>
+                </td>
+                <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content . '</textarea></td>
+                <td style="background-color:' . $row->Color . '"></td>
+                <td style="background-color:' . $row->Color . '">' . $colorselect . '</td>
+                <!--<td style="background-color:' . $row->Color . '"></td>-->
+            </tr>';
+        }
     }
 }
-
-
