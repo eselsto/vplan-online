@@ -91,6 +91,9 @@ if($action == "create"){
                         <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'up\',\'1\')"><i class="material-icons">arrow_upward</i></button>
                         <button type="button" class="btn btn-primary"onClick="moveElement(' . $row->ID . ',\'down\',\'1\')" ><i class="material-icons">arrow_downward</i></button>
                     </div>
+                     <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-primary" onClick="addElementToPresets(' . $row->ID . ')" ><i class="material-icons">archive</i></button>
+                    </div>
                 </td>
                 <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content . '</textarea></td>
                 <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content2" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content2 . '</textarea></td>
