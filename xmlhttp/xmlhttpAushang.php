@@ -143,8 +143,11 @@ if($action == "create"){
                         <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'up\',\'3\')"><i class="material-icons">arrow_upward</i></button>
                         <button type="button" class="btn btn-primary" onClick="moveElement(' . $row->ID . ',\'down\',\'3\')" ><i class="material-icons">arrow_downward</i></button>
                         <button type="button" class="btn btn-danger" onClick="removeElementFromApi(' . $row->ID . ')" ><i class="material-icons">delete_forever</i></button>
-                                                <button type="button" class="btn btn-warning" id="edit.' . $row->ID . '" onClick="editElementFromApi(' . $row->ID . ')" ><i class="material-icons">edit</i></button>
+                        <button type="button" class="btn btn-warning" id="edit.' . $row->ID . '" onClick="editElementFromApi(' . $row->ID . ')" ><i class="material-icons">edit</i></button>
                         <button type="button" class="btn btn-success" id="save.' . $row->ID . '" onClick="updateToApi(' . $row->ID . ')" style="display: none;"><i class="material-icons">save</i></button>
+                    </div>
+                    <div class="btn-group" role="group" aria-label="Actions">
+                        <button type="button" class="btn btn-success" onClick="addElementFromPresets(' . $row->ID . ')" ><i class="material-icons">unarchive</i></button>
                     </div>
                 </td>
                 <td style="background-color:' . $row->Color . '"><textarea id="textarea.' . $row->ID . '.content" class="form-control" onkeyup="textAreaAdjust(this)" disabled>' . $row->Content . '</textarea></td>
